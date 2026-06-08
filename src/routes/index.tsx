@@ -209,7 +209,30 @@ function HomePage() {
         <h2 className="text-center font-display text-4xl md:text-5xl font-black text-primary">
           Shop By Category
         </h2>
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Rug Program — featured dark card, parity offering with a different buying experience */}
+          <Link
+            to="/contact"
+            className="group relative flex flex-col overflow-hidden rounded-2xl bg-primary text-primary-foreground p-7 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]"
+          >
+            <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-coral to-gold" />
+            <span className="grid h-12 w-12 place-items-center rounded-full bg-primary-foreground/10 text-gold ring-1 ring-primary-foreground/15">
+              <Boxes className="h-6 w-6" />
+            </span>
+            <h3 className="mt-5 font-display text-2xl font-black">Rug Program</h3>
+            <p className="mt-3 text-sm text-primary-foreground/80 leading-relaxed">
+              High quality, new rugs — curated and delivered on your schedule.
+            </p>
+            <div className="mt-5 inline-flex w-fit rounded-full bg-primary-foreground/10 px-3 py-1 text-xs font-semibold text-gold ring-1 ring-primary-foreground/15">
+              Curated Rugs
+            </div>
+            <div className="mt-auto pt-6">
+              <span className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gold px-4 py-2.5 text-sm font-bold text-primary group-hover:bg-gold/90">
+                Explore the Program <ArrowRight className="h-4 w-4" />
+              </span>
+            </div>
+          </Link>
+
           {CATEGORIES.map((c) => (
             <Link
               key={c.name}
@@ -225,34 +248,13 @@ function HomePage() {
               <div className="mt-5 inline-flex w-fit rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-muted-foreground">
                 {c.tags}
               </div>
-              <div className="mt-6 inline-flex items-center gap-1 text-sm font-bold text-primary group-hover:text-mission">
-                Shop {c.name} <ArrowRight className="h-4 w-4" />
+              <div className="mt-auto pt-6">
+                <span className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gold px-4 py-2.5 text-sm font-bold text-primary group-hover:bg-gold/90">
+                  Shop {c.name} <ArrowRight className="h-4 w-4" />
+                </span>
               </div>
             </Link>
           ))}
-        </div>
-      </section>
-
-      {/* RUG PROGRAM */}
-      <section className="container mx-auto px-4 md:px-6 pb-20">
-        <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-secondary to-card p-10 md:p-14">
-          <span className="text-xs font-bold uppercase tracking-widest text-mission">
-            Rug Program
-          </span>
-          <h3 className="mt-3 font-display text-3xl md:text-4xl font-black text-primary max-w-2xl">
-            Looking for rugs?
-          </h3>
-          <p className="mt-4 max-w-2xl text-base md:text-lg text-muted-foreground">
-            Visit the Comeback Rug Program — curated closeout rugs, pallet-ready and
-            delivered on your schedule.
-          </p>
-          <div className="mt-7">
-            <Button asChild variant="outline" size="lg">
-              <Link to="/contact">
-                Visit Rug Program <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
         </div>
       </section>
 
