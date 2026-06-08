@@ -233,7 +233,7 @@ function HomePage() {
                 Explore the Program <ArrowRight className="h-4 w-4" />
               </span>
             </div>
-          </Link>
+          </a>
 
           {CATEGORIES.map((c) => (
             <Link
