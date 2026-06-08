@@ -148,7 +148,7 @@ export const getCatalog = createServerFn({ method: "GET" }).handler(
     const items: Sku[] = [];
     let latest = 0;
     for (const row of data ?? []) {
-      const list = (row.items as Sku[]) ?? [];
+      const list = (row.items as unknown as Sku[]) ?? [];
       items.push(...list);
       const t = new Date(row.approved_at as string).getTime();
       if (t > latest) latest = t;
@@ -204,8 +204,8 @@ export const getAdminStatus = createServerFn({ method: "POST" })
       const brands: BrandStatus[] = TABS.map((brand) => {
         const l = liveMap.get(brand);
         const s = stagedMap.get(brand);
-        const liveItems: Sku[] = (l?.items as Sku[]) ?? [];
-        const stagedItems: Sku[] | null = s ? ((s.items as Sku[]) ?? []) : null;
+        const liveItems: Sku[] = (l?.items as unknown as Sku[]) ?? [];
+        const stagedItems: Sku[] | null = s ? ((s.items as unknown as Sku[]) ?? []) : null;
         const diff = stagedItems
           ? diffSets(liveItems, stagedItems)
           : { added: 0, removed: 0, changed: 0 };
@@ -247,8 +247,8 @@ export const getStagedBrand = createServerFn({ method: "POST" })
           .maybeSingle(),
       ]);
       return {
-        live: ((l?.items as Sku[]) ?? []),
-        staged: s ? ((s.items as Sku[]) ?? []) : null,
+        live: ((l?.items as unknown as Sku[]) ?? []),
+        staged: s ? ((s.items as unknown as Sku[]) ?? []) : null,
       };
     },
   );
@@ -274,7 +274,7 @@ export const runImportSync = createServerFn({ method: "POST" })
         .from("live_snapshots")
         .select("brand, items");
       const liveMap = new Map(
-        (liveRows ?? []).map((r: any) => [r.brand, (r.items as Sku[]) ?? []]),
+        (liveRows ?? []).map((r: any) => [r.brand, (r.items as unknown as Sku[]) ?? []]),
       );
 
       const summary: Record<
