@@ -290,7 +290,7 @@ export const runImportSync = createServerFn({ method: "POST" })
         if (autoApprove) {
           await supabaseAdmin
             .from("live_snapshots")
-            .upsert({ brand, items, approved_at: new Date().toISOString() });
+            .upsert({ brand, items: items as any, approved_at: new Date().toISOString() });
           await supabaseAdmin
             .from("staged_snapshots")
             .delete()
@@ -298,13 +298,14 @@ export const runImportSync = createServerFn({ method: "POST" })
         } else {
           await supabaseAdmin.from("staged_snapshots").upsert({
             brand,
-            items,
+            items: items as any,
             fetched_at: new Date().toISOString(),
             run_id: run.id,
           });
         }
         summary[brand] = { ...d, total: items.length, autoApproved: autoApprove };
       }
+
 
       await supabaseAdmin
         .from("import_runs")
@@ -348,9 +349,10 @@ export const approveBrand = createServerFn({ method: "POST" })
       .from("live_snapshots")
       .upsert({
         brand: data.brand,
-        items: s.items,
+        items: s.items as any,
         approved_at: new Date().toISOString(),
       });
+
     await supabaseAdmin
       .from("staged_snapshots")
       .delete()
