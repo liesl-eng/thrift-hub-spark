@@ -12,7 +12,7 @@ export function SiteFooter() {
                 <Recycle className="h-5 w-5" />
               </span>
               <span className="font-display text-lg font-black uppercase">
-                Comeback × Goodwill
+                Comeback Restock
               </span>
             </div>
             <p className="mt-4 max-w-md text-sm text-primary-foreground/75 leading-relaxed">
