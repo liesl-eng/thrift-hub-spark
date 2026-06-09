@@ -319,7 +319,8 @@ function CatalogInner() {
 
 function SkuCard({ sku, added, onAdd }: { sku: Sku; added: boolean; onAdd: () => void }) {
   const savings = sku.msrp > sku.price ? Math.round((1 - sku.price / sku.msrp) * 100) : 0;
-  const imgSrc = imageForSku(sku);
+  const override = overrideForSku(sku);
+  const imgSrc = override?.url ?? sku.image;
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
@@ -328,11 +329,15 @@ function SkuCard({ sku, added, onAdd }: { sku: Sku; added: boolean; onAdd: () =>
             src={imgSrc}
             alt={sku.name}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className={cn(
+              "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105",
+              override?.imgClassName,
+            )}
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).style.display = "none";
             }}
           />
+
         ) : (
           <div className="grid h-full w-full place-items-center text-muted-foreground">
             <ImageOff className="h-8 w-8" />
