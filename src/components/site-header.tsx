@@ -26,10 +26,16 @@ export function SiteHeader() {
           <span className="grid h-9 w-9 place-items-center rounded-md bg-primary text-primary-foreground transition-transform group-hover:rotate-12">
             <Recycle className="h-5 w-5" />
           </span>
-          <span className="font-display text-lg font-black uppercase tracking-tight">
-            Comeback <span className="text-mission">Restock</span>
+          <img
+            src={comebackLogo.url}
+            alt="Comeback Goods"
+            className="h-9 w-9 rounded-full object-cover"
+          />
+          <span className="font-display text-lg font-black uppercase tracking-tighter">
+            Comeback<span className="text-mission ml-1">Restock</span>
           </span>
         </Link>
+
 
         <nav className="hidden md:flex items-center gap-1">
           {NAV.map((n) => {
