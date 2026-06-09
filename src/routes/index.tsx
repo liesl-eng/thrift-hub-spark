@@ -144,15 +144,14 @@ function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-primary/80 to-primary/50" />
         <div className="container relative mx-auto px-4 md:px-6 pt-24 pb-28 md:pt-32 md:pb-36 text-center">
           <h1
-            className="mx-auto max-w-5xl font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.95]"
+            className="mx-auto max-w-5xl font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase leading-[0.95]"
             style={{ textShadow: "3px 3px 0 oklch(0 0 0 / 0.35)" }}
           >
-            Tiny Imperfections.<br />
-            <span className="marker-highlight marker-highlight-coral">Huge</span>{" "}
-            Savings.
+            SUSTAINABLE SOURCING.<br />
+            PREMIUM RESULTS.
           </h1>
           <p className="mt-6 mx-auto max-w-2xl text-lg md:text-xl text-primary-foreground/85">
-            Sustainable sourcing. At a fraction of wholesale.
+            Inventory with intention.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
             <Button asChild variant="hero" size="xl">
