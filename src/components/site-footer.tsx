@@ -12,7 +12,7 @@ export function SiteFooter() {
                 <Recycle className="h-5 w-5" />
               </span>
               <span className="font-display text-lg font-black uppercase">
-                Comeback × Goodwill
+                Comeback Restock
               </span>
             </div>
             <p className="mt-4 max-w-md text-sm text-primary-foreground/75 leading-relaxed">
@@ -38,7 +38,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="mt-12 pt-6 border-t border-primary-foreground/15 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-primary-foreground/60">
-          <p>© {new Date().getFullYear()} Comeback Goods. Built for thrift.</p>
+          <p>© {new Date().getFullYear()} Comeback Restock. Built for thrift.</p>
           <p>Not affiliated with Goodwill Industries International. Branding shown for partner outreach.</p>
         </div>
       </div>
