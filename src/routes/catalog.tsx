@@ -18,6 +18,23 @@ import {
 import { useQuote } from "@/lib/quote-context";
 import { Check, Plus, Search, ShoppingBag, ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
+import meridianBrushedSteel from "@/assets/meridian-brushed-steel.webp.asset.json";
+
+// Manual image overrides — matched by case-insensitive substring against `${brand} ${name}`.
+const IMAGE_OVERRIDES: { match: string[]; url: string }[] = [
+  {
+    match: ["meridian", "brushed steel"],
+    url: meridianBrushedSteel.url,
+  },
+];
+
+function imageForSku(sku: Sku): string {
+  const hay = `${sku.brand} ${sku.name}`.toLowerCase();
+  for (const o of IMAGE_OVERRIDES) {
+    if (o.match.every((m) => hay.includes(m.toLowerCase()))) return o.url;
+  }
+  return sku.image;
+}
 
 const CATEGORIES = ["Lighting", "Mirrors", "Tables"] as const;
 type Category = (typeof CATEGORIES)[number];
@@ -290,12 +307,13 @@ function CatalogInner() {
 
 function SkuCard({ sku, added, onAdd }: { sku: Sku; added: boolean; onAdd: () => void }) {
   const savings = sku.msrp > sku.price ? Math.round((1 - sku.price / sku.msrp) * 100) : 0;
+  const imgSrc = imageForSku(sku);
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        {sku.image ? (
+        {imgSrc ? (
           <img
-            src={sku.image}
+            src={imgSrc}
             alt={sku.name}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
