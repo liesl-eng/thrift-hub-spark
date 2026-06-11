@@ -204,7 +204,7 @@ function HomePage() {
                   <s.icon className="h-4 w-4" />
                 </span>
                 <div className="flex flex-col leading-tight">
-                  <span className="text-[20px] font-bold text-primary">
+                  <span className="text-[28px] md:text-[32px] font-bold text-primary whitespace-nowrap">
                     {s.value}
                   </span>
                   <span className="text-[13px] text-muted-foreground">
