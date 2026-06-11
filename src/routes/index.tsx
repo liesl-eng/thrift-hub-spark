@@ -161,10 +161,10 @@ function HomePage() {
               RESULTS.
             </span>
           </h1>
-          <p className="mt-6 mx-auto max-w-2xl text-xl md:text-2xl text-primary-foreground/85">
+          <p className="mt-4 mx-auto max-w-2xl text-xl md:text-2xl text-primary-foreground/85">
             Inventory with intention.
           </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button asChild variant="hero" size="xl">
               <Link to="/catalog">
                 Shop Catalog <ArrowRight className="h-5 w-5" />
@@ -180,7 +180,7 @@ function HomePage() {
               </a>
             </Button>
           </div>
-          <div className="mt-6">
+          <div className="mt-4">
             <Link
               to="/how-it-works"
               className="inline-block rounded-full bg-primary-foreground/10 px-5 py-2 text-sm font-semibold text-primary-foreground ring-1 ring-primary-foreground/20 hover:bg-primary-foreground/20"
