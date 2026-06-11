@@ -49,7 +49,7 @@ function imageForSku(sku: Sku): string {
 }
 
 
-const CATEGORIES = ["Lighting", "Mirrors", "Tables"] as const;
+const CATEGORIES = ["All", "Lighting", "Mirrors", "Tables", "Large Furniture", "Accessories"] as const;
 type Category = (typeof CATEGORIES)[number];
 
 type SortKey = "featured" | "price-asc" | "price-desc" | "savings" | "name";
@@ -91,17 +91,14 @@ function CatalogPage() {
 }
 
 function matchesCategory(sku: Sku, cat: Category): boolean {
-  const c = sku.category?.toLowerCase() ?? "";
-  if (cat === "Lighting") return c.includes("light") || c.includes("lamp") || c.includes("sconce") || c.includes("chandelier");
-  if (cat === "Mirrors") return c.includes("mirror");
-  if (cat === "Tables") return c.includes("table");
-  return false;
+  if (cat === "All") return true;
+  return (sku.category ?? "").trim().toLowerCase() === cat.toLowerCase();
 }
 
 function CatalogInner() {
   const { data } = useSuspenseQuery(catalogQueryOptions);
   const all = data.items;
-  const [category, setCategory] = useState<Category>("Lighting");
+  const [category, setCategory] = useState<Category>("All");
   const [brand, setBrand] = useState<string>("All");
   const [sort, setSort] = useState<SortKey>("featured");
   const [query, setQuery] = useState("");
@@ -121,7 +118,7 @@ function CatalogInner() {
 
   const filtered = useMemo(() => {
     const list = byCategory.filter((s) => {
-      if (brand !== "All" && s.brand !== brand) return false;
+      if (brand !== "All" && (s.brand ?? "").trim().toLowerCase() !== brand.trim().toLowerCase()) return false;
       if (query) {
         const q = query.toLowerCase();
         if (!s.name.toLowerCase().includes(q) && !s.brand.toLowerCase().includes(q))
@@ -268,7 +265,7 @@ function CatalogInner() {
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={`Search ${category.toLowerCase()}…`}
+              placeholder={category === "All" ? "Search catalog…" : `Search ${category.toLowerCase()}…`}
               className="pl-9 h-11"
             />
           </div>
@@ -287,7 +284,7 @@ function CatalogInner() {
           {filtered.length === 0 && (
             <div className="col-span-full rounded-2xl border border-dashed border-border bg-card/50 p-10 text-center">
               <p className="font-display text-xl text-primary">
-                No {category.toLowerCase()} match those filters.
+                No {category === "All" ? "items" : category.toLowerCase()} match those filters.
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Try clearing a filter, or{" "}
