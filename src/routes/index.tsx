@@ -45,9 +45,9 @@ export const Route = createFileRoute("/")({
 });
 
 const STATS = [
-  { value: "Already 400+ tons", label: "diverted from landfill", icon: Recycle },
-  { value: "Up to 60%", label: "below wholesale", icon: BadgeCheck },
-  { value: "New", label: "inspected and floor ready", icon: ShieldCheck },
+  { text: "Already 400+ tons diverted from landfill", icon: Recycle },
+  { text: "Up to 60% below wholesale", icon: BadgeCheck },
+  { text: "New, inspected and floor ready", icon: ShieldCheck },
 ];
 
 const CATEGORIES = [
