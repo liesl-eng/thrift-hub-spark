@@ -275,7 +275,7 @@ function HomePage() {
 
       {/* STRETCH YOUR BUDGET */}
       <section className="bg-secondary/50 border-y border-border">
-        <div className="container mx-auto px-4 md:px-6 py-20 md:py-28">
+        <div className="container mx-auto px-4 md:px-6 pt-10 md:pt-14 pb-20 md:pb-28">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="font-display text-4xl md:text-5xl font-black text-primary">
               Stretch Your Budget,{" "}
