@@ -265,7 +265,7 @@ function CatalogInner() {
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={`Search ${category.toLowerCase()}…`}
+              placeholder={category === "All" ? "Search catalog…" : `Search ${category.toLowerCase()}…`}
               className="pl-9 h-11"
             />
           </div>
