@@ -45,9 +45,9 @@ export const Route = createFileRoute("/")({
 });
 
 const STATS = [
-  { text: "Already 400+ tons diverted from landfill", icon: Recycle },
-  { text: "Up to 60% below wholesale", icon: BadgeCheck },
-  { text: "New, inspected and floor ready", icon: ShieldCheck },
+  { value: "Already 400+ tons", label: "diverted from landfill", icon: Recycle },
+  { value: "Up to 60%", label: "below wholesale", icon: BadgeCheck },
+  { value: "New", label: "inspected and floor ready", icon: ShieldCheck },
 ];
 
 const CATEGORIES = [
@@ -197,15 +197,20 @@ function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
             {STATS.map((s) => (
               <div
-                key={s.text}
+                key={s.value + s.label}
                 className="flex items-center gap-3 px-2 py-2"
               >
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gold/20 text-gold">
                   <s.icon className="h-4 w-4" />
                 </span>
-                <span className="text-sm font-semibold text-primary leading-snug">
-                  {s.text}
-                </span>
+                <div className="flex flex-col leading-tight">
+                  <span className="text-[20px] font-bold text-primary">
+                    {s.value}
+                  </span>
+                  <span className="text-[13px] text-muted-foreground">
+                    {s.label}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
