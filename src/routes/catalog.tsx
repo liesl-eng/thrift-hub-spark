@@ -98,7 +98,7 @@ function matchesCategory(sku: Sku, cat: Category): boolean {
 function CatalogInner() {
   const { data } = useSuspenseQuery(catalogQueryOptions);
   const all = data.items;
-  const [category, setCategory] = useState<Category>("Lighting");
+  const [category, setCategory] = useState<Category>("All");
   const [brand, setBrand] = useState<string>("All");
   const [sort, setSort] = useState<SortKey>("featured");
   const [query, setQuery] = useState("");
