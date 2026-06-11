@@ -197,20 +197,15 @@ function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             {STATS.map((s) => (
               <div
-                key={s.value + s.label}
-                className="flex flex-col items-center justify-center gap-4 text-center md:flex-row md:text-left"
+                key={s.text}
+                className="flex items-center gap-4 text-left"
               >
-                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-gold/20 text-gold">
-                  <s.icon className="h-6 w-6" />
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-gold/20 text-gold">
+                  <s.icon className="h-5 w-5" />
                 </span>
-                <div className="flex flex-col items-center md:items-start">
-                  <div className="font-display text-3xl md:text-4xl font-black text-primary leading-none">
-                    {s.value}
-                  </div>
-                  <div className="mt-1 text-sm md:text-base text-muted-foreground">
-                    {s.label}
-                  </div>
-                </div>
+                <span className="text-sm md:text-base lg:text-lg font-semibold text-primary whitespace-nowrap">
+                  {s.text}
+                </span>
               </div>
             ))}
           </div>
