@@ -59,10 +59,6 @@ function overrideForSku(sku: SheetRow) {
   return null;
 }
 
-const CATEGORIES = ["All", "Lighting", "Mirrors", "Tables"] as const;
-const ALLOWED_CATEGORIES = ["Lighting", "Mirrors", "Tables"] as const;
-type Category = (typeof CATEGORIES)[number];
-
 type SortKey = "featured" | "price-asc" | "price-desc" | "savings" | "name";
 
 export const Route = createFileRoute("/catalog")({
@@ -81,11 +77,9 @@ export const Route = createFileRoute("/catalog")({
   component: CatalogInner,
 });
 
-function matchesCategory(sku: SheetRow, cat: Category): boolean {
-  const c = sku.category ?? "";
-  if (!ALLOWED_CATEGORIES.some((a) => a === c)) return false;
+function matchesCategory(sku: SheetRow, cat: string): boolean {
   if (cat === "All") return true;
-  return c === cat;
+  return (sku.category ?? "").trim().toLowerCase() === cat.trim().toLowerCase();
 }
 
 function isHiddenBrand(sku: SheetRow): boolean {
@@ -94,7 +88,11 @@ function isHiddenBrand(sku: SheetRow): boolean {
 
 function CatalogInner() {
   const { products: all, loading, error } = useCatalogProducts();
-  const [category, setCategory] = useState<Category>("All");
+  const categories = useMemo(
+    () => ["All", ...Array.from(new Set(all.map((s) => s.category ?? "").filter(Boolean))).sort()],
+    [all],
+  );
+  const [category, setCategory] = useState<string>("All");
   const [brand, setBrand] = useState<string>("All");
   const [sort, setSort] = useState<SortKey>("featured");
   const [query, setQuery] = useState("");
@@ -158,7 +156,7 @@ function CatalogInner() {
     } as unknown as Parameters<typeof add>[0]);
   };
 
-  const selectCategory = (c: Category) => {
+  const selectCategory = (c: string) => {
     setCategory(c);
     setBrand("All");
   };
@@ -204,7 +202,7 @@ function CatalogInner() {
       <div className="bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex items-end gap-8 md:gap-12 overflow-x-auto">
-            {CATEGORIES.map((c) => {
+            {categories.map((c) => {
               const active = category === c;
               return (
                 <button
