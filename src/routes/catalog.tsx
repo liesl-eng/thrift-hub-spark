@@ -96,12 +96,11 @@ function isHiddenBrand(sku: SheetRow): boolean {
   return (sku.brand ?? "").trim().toLowerCase() === "vesta";
 }
 
+const CATEGORY_TABS = ["All", "Lighting", "Mirrors", "Tables"] as const;
+
 function CatalogInner() {
   const { products: all, loading, error } = useCatalogProducts();
-  const categories = useMemo(
-    () => ["All", ...Array.from(new Set(all.filter((s) => !isHiddenBrand(s)).map((s) => s.category ?? "").filter(Boolean))).sort()],
-    [all],
-  );
+  const categories = CATEGORY_TABS;
   const [category, setCategory] = useState<string>("All");
   const [brand, setBrand] = useState<string>("All");
   const [sort, setSort] = useState<SortKey>("featured");
