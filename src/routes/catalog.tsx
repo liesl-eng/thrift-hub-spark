@@ -408,10 +408,10 @@ function BrandChip({
     <button
       onClick={onClick}
       className={cn(
-        "rounded-md px-4 py-2 text-sm font-medium transition-colors border bg-card",
+        "rounded-md px-4 py-2 text-sm font-medium transition-colors border",
         active
-          ? "border-primary text-primary shadow-sm"
-          : "border-border text-foreground hover:border-primary/40 hover:text-primary",
+          ? "bg-gold text-gold-foreground border-gold shadow-sm"
+          : "bg-card border-border text-foreground hover:border-primary/40 hover:text-primary",
       )}
     >
       {children}
