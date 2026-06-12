@@ -370,10 +370,10 @@ function PreviewModal({
     onSuccess: onApproved,
   });
 
-  const { added, removed, changed, allRows } = computeDiffRows(
-    q.data?.live ?? [],
-    q.data?.staged ?? [],
-  );
+  const added = q.data?.added ?? 0;
+  const removed = q.data?.removed ?? 0;
+  const changed = q.data?.changed ?? 0;
+  const allRows = q.data?.rows ?? [];
 
   return (
     <div
