@@ -356,10 +356,10 @@ function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: 
 
         <div className="mt-4 flex items-baseline gap-2">
           <span className="font-display text-3xl font-black text-primary">
-            {formatMoney(sku.price)}
+            {formatMoney(sku.price ?? 0)}
           </span>
           <span className="text-sm text-muted-foreground line-through">
-            {formatMoney(sku.msrp)}
+            {formatMoney(sku.msrp ?? 0)}
           </span>
         </div>
         <div className="mt-1 text-xs text-muted-foreground">
