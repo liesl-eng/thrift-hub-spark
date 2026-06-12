@@ -16,7 +16,8 @@ import { Check, Plus, Search, ShoppingBag, ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import meridianBrushedSteel from "@/assets/meridian-brushed-steel.webp.asset.json";
 
-function formatMoney(n: number): string {
+function formatMoney(n: number | null): string {
+  if (n == null) return "—";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -25,149 +26,119 @@ function formatMoney(n: number): string {
 }
 
 function skuId(sku: SheetRow): string {
-  return [
-    sku.brand,
-    sku.name,
-    sku.imageFilename,
-    sku.imageUrl,
-    sku.category,
-    sku.price,
-    sku.msrp,
-  ]
-    .map((part) => String(part ?? ""))
-    .join("::");
+  return `${sku.brand}::${sku.name}`;
 }
 
-const DISCOUNT_RATE = 0.8; // 80% off MSRP
-
-function discountedPrice(sku: SheetRow): number {
-  const msrp = sku.msrp ?? 0;
-  return msrp > 0 ? Math.round(msrp * (1 - DISCOUNT_RATE) * 100) / 100 : sku.price ?? 0;
-}
-
-function percentOff(_sku: SheetRow): number {
-  return 80;
-}
-
-// Manual image overrides — matched by case-insensitive substring against `${brand} ${name}`.
-const IMAGE_OVERRIDES: { match: string[]; url?: string; imgClassName?: string }[] = [
-  {
-    match: ["meridian", "brushed steel"],
-    url: meridianBrushedSteel.url,
-  },
-  {
-    match: ["meridian", "black"],
-    imgClassName: "scale-[1.6] -translate-y-10",
-  },
+const IMAGE_OVERRIDES: { match: string[]; url: string }[] = [
+  { match: ["meridian", "brushed steel"], url: meridianBrushedSteel.url },
 ];
 
-function overrideForSku(sku: SheetRow) {
+function imageForSku(sku: SheetRow): string | null {
   const hay = `${sku.brand} ${sku.name}`.toLowerCase();
   for (const o of IMAGE_OVERRIDES) {
-    if (o.match.every((m) => hay.includes(m.toLowerCase()))) return o;
+    if (o.match.every((m) => hay.includes(m.toLowerCase()))) return o.url;
   }
-  return null;
+  return sku.imageUrl ?? null;
 }
 
-type SortKey = "featured" | "price-asc" | "price-desc" | "savings" | "name";
+const CATEGORY_TABS = ["All", "Lighting", "Mirrors", "Tables"] as const;
+type Category = (typeof CATEGORY_TABS)[number];
+
+type SortKey = "featured" | "price-asc" | "price-desc" | "name";
 
 export const Route = createFileRoute("/catalog")({
   head: () => ({
     meta: [
-      { title: "Catalog — Pick the SKUs your store actually needs" },
+      { title: "Catalog — Comeback Restock" },
       {
         name: "description",
-        content:
-          "Live, pick-by-SKU catalog of returned and overstock inventory. Filter by brand and category. Updated daily at noon ET.",
+        content: "Live thrift inventory — Lighting, Mirrors, Tables and more. Updated daily.",
       },
-      { property: "og:title", content: "Comeback Restock Catalog" },
-      { property: "og:description", content: "Pick-by-SKU inventory for nonprofit thrift." },
     ],
   }),
-  component: CatalogInner,
+  component: CatalogPage,
 });
 
-function matchesCategory(sku: SheetRow, cat: string): boolean {
-  if (cat === "All") return true;
-  return (sku.category ?? "").trim().toLowerCase() === cat.trim().toLowerCase();
-}
-
-function isHiddenBrand(sku: SheetRow): boolean {
-  return (sku.brand ?? "").trim().toLowerCase() === "vesta";
-}
-
-const CATEGORY_TABS = ["All", "Lighting", "Mirrors", "Tables"] as const;
-
-function CatalogInner() {
-  const { products: all, loading, error } = useCatalogProducts();
-  const categories = CATEGORY_TABS;
-  const [category, setCategory] = useState<string>("All");
+function CatalogPage() {
+  const { products, loading, error } = useCatalogProducts();
+  const [category, setCategory] = useState<Category>("All");
   const [brand, setBrand] = useState<string>("All");
   const [sort, setSort] = useState<SortKey>("featured");
   const [query, setQuery] = useState("");
   const { add, items } = useQuote();
 
-  const byCategory = useMemo(
-    () => all.filter((s) => !isHiddenBrand(s) && matchesCategory(s, category)),
-    [all, category],
+  const inCategory = useMemo(
+    () =>
+      category === "All"
+        ? products
+        : products.filter(
+            (p) =>
+              (p.category ?? "").trim().toLowerCase() ===
+              category.toLowerCase(),
+          ),
+    [products, category],
   );
 
   const brands = useMemo(
-    () => Array.from(new Set(byCategory.map((s) => s.brand))).sort(),
-    [byCategory],
+    () =>
+      Array.from(new Set(inCategory.map((s) => s.brand).filter(Boolean))).sort(),
+    [inCategory],
   );
 
   const filtered = useMemo(() => {
-    const list = byCategory.filter((s) => {
-      if (brand !== "All" && (s.brand ?? "").trim().toLowerCase() !== brand.trim().toLowerCase()) return false;
+    const list = inCategory.filter((s) => {
+      if (brand !== "All" && s.brand !== brand) return false;
       if (query) {
         const q = query.toLowerCase();
-        if (!s.name.toLowerCase().includes(q) && !s.brand.toLowerCase().includes(q))
+        if (
+          !s.name.toLowerCase().includes(q) &&
+          !(s.brand ?? "").toLowerCase().includes(q)
+        )
           return false;
       }
       return true;
     });
+
     const sorted = [...list];
-    const p = (x: SheetRow) => discountedPrice(x);
-    const m = (x: SheetRow) => x.msrp ?? 0;
     switch (sort) {
       case "price-asc":
-        sorted.sort((a, b) => p(a) - p(b));
+        sorted.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
         break;
       case "price-desc":
-        sorted.sort((a, b) => p(b) - p(a));
-        break;
-      case "savings":
-        sorted.sort((a, b) => (m(b) - p(b)) / (m(b) || 1) - (m(a) - p(a)) / (m(a) || 1));
+        sorted.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
         break;
       case "name":
-        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        sorted.sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""));
         break;
       case "featured":
       default:
-        sorted.sort((a, b) => (b.unitsAvailable > 0 ? 1 : 0) - (a.unitsAvailable > 0 ? 1 : 0));
+        sorted.sort(
+          (a, b) =>
+            (b.unitsAvailable > 0 ? 1 : 0) - (a.unitsAvailable > 0 ? 1 : 0),
+        );
     }
     return sorted;
-  }, [byCategory, brand, query, sort]);
+  }, [inCategory, brand, query, sort]);
 
   const inQuote = (id: string) => items.some((i) => i.id === id);
+
+  const selectCategory = (c: Category) => {
+    setCategory(c);
+    setBrand("All");
+  };
 
   const addSku = (sku: SheetRow) => {
     add({
       id: skuId(sku),
       name: sku.name,
-      brand: sku.brand,
+      brand: sku.brand ?? "",
       category: sku.category ?? "",
-      image: sku.imageUrl,
-      price: discountedPrice(sku),
-      msrp: sku.msrp ?? 0,
+      image: sku.imageUrl ?? "",
+      price: sku.price ?? 0,
+      msrp: sku.msrp ?? sku.price ?? 0,
       units: sku.unitsAvailable,
-    } as unknown as Parameters<typeof add>[0]);
-  };
-
-  const selectCategory = (c: string) => {
-    setCategory(c);
-    setBrand("All");
+      lastUpdated: sku.sourceLastUpdated ?? "",
+    });
   };
 
   if (loading)
@@ -176,6 +147,7 @@ function CatalogInner() {
         <p className="font-display text-2xl text-primary">Loading live inventory…</p>
       </div>
     );
+
   if (error)
     return (
       <div className="container mx-auto px-4 md:px-6 py-20 text-center">
@@ -185,33 +157,10 @@ function CatalogInner() {
 
   return (
     <div>
-      {/* Hero */}
-      <div className="container mx-auto px-4 md:px-6 pt-12 md:pt-16 pb-6">
-        <div className="max-w-3xl">
-          <span className="inline-flex items-center gap-2 text-sm md:text-base font-bold uppercase tracking-widest text-mission">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mission opacity-75"></span>
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-mission"></span>
-            </span>
-            Live catalog
-          </span>
-          <h1 className="mt-3 font-display text-4xl md:text-6xl font-black text-primary">
-            Pick exactly what your{" "}
-            <span className="marker-highlight marker-highlight-gold">floor needs</span>.
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Every SKU below is pulled live from our warehouse sheet, refreshed
-            daily at noon ET. Build a quote, hit send, and we'll confirm within
-            one business day.
-          </p>
-        </div>
-      </div>
-
-      {/* Category tabs - navy bar */}
       <div className="bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex items-end gap-8 md:gap-12 overflow-x-auto">
-            {categories.map((c) => {
+            {CATEGORY_TABS.map((c) => {
               const active = category === c;
               return (
                 <button
@@ -235,47 +184,23 @@ function CatalogInner() {
         </div>
       </div>
 
-      {/* Filter + Sort bar */}
       <div className="border-b border-border bg-muted/40">
-      <div className="container mx-auto px-4 md:px-6 py-4 flex flex-col lg:flex-row lg:items-center gap-4">
+        <div className="container mx-auto px-4 md:px-6 py-4 flex flex-col lg:flex-row lg:items-center gap-4">
           <div className="flex items-center gap-3 flex-wrap flex-1">
-            <span className="text-sm text-muted-foreground whitespace-nowrap">
-              Filter by Brand:
-            </span>
-            <BrandChip
-              active={brand === "All"}
-              onClick={() => setBrand("All")}
-            >
-              All Brands
-            </BrandChip>
+            <span className="text-sm text-muted-foreground whitespace-nowrap">Filter by Brand:</span>
+            <BrandChip active={brand === "All"} onClick={() => setBrand("All")}>All Brands</BrandChip>
             {brands.map((b) => (
-              <BrandChip
-                key={b}
-                active={brand === b}
-                onClick={() => setBrand(b)}
-              >
-                {b}
-              </BrandChip>
+              <BrandChip key={b} active={brand === b} onClick={() => setBrand(b)}>{b}</BrandChip>
             ))}
-            {brands.length === 0 && (
-              <span className="text-xs text-muted-foreground italic">
-                No brands in this category yet.
-              </span>
-            )}
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground whitespace-nowrap">
-              Sort by:
-            </span>
+            <span className="text-sm text-muted-foreground whitespace-nowrap">Sort by:</span>
             <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
-              <SelectTrigger className="w-[180px] bg-card">
-                <SelectValue />
-              </SelectTrigger>
+              <SelectTrigger className="w-[180px] bg-card"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="featured">Featured</SelectItem>
                 <SelectItem value="price-asc">Price: Low to High</SelectItem>
                 <SelectItem value="price-desc">Price: High to Low</SelectItem>
-                <SelectItem value="savings">Biggest savings</SelectItem>
                 <SelectItem value="name">Name: A–Z</SelectItem>
               </SelectContent>
             </Select>
@@ -284,7 +209,6 @@ function CatalogInner() {
       </div>
 
       <div className="container mx-auto px-4 md:px-6 py-8 md:py-10">
-        {/* Search */}
         <div className="mb-6 max-w-md">
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -297,13 +221,12 @@ function CatalogInner() {
           </div>
         </div>
 
-        {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((sku) => {
+          {filtered.map((sku, i) => {
             const id = skuId(sku);
             return (
               <SkuCard
-                key={id}
+                key={`${id}-${i}`}
                 sku={sku}
                 added={inQuote(id)}
                 onAdd={() => addSku(sku)}
@@ -319,28 +242,21 @@ function CatalogInner() {
                 Try clearing a filter, or{" "}
                 <Link to="/contact" className="underline underline-offset-4 hover:text-primary">
                   ask us what's coming this week
-                </Link>
-                .
+                </Link>.
               </p>
             </div>
           )}
         </div>
 
-        {/* Bottom CTA */}
         <div className="mt-14 rounded-3xl bg-primary text-primary-foreground p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">
           <div>
-            <h2 className="font-display text-2xl md:text-3xl font-black">
-              Ready to send your quote?
-            </h2>
+            <h2 className="font-display text-2xl md:text-3xl font-black">Ready to send your quote?</h2>
             <p className="mt-2 text-primary-foreground/75 max-w-xl">
-              We confirm availability within one business day and arrange freight
-              to your DC or store.
+              We confirm availability within one business day and arrange freight to your DC or store.
             </p>
           </div>
           <Button asChild variant="hero" size="xl">
-            <Link to="/contact">
-              <ShoppingBag className="h-5 w-5" /> Review your quote
-            </Link>
+            <Link to="/contact"><ShoppingBag className="h-5 w-5" /> Review your quote</Link>
           </Button>
         </div>
       </div>
@@ -349,10 +265,7 @@ function CatalogInner() {
 }
 
 function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: () => void }) {
-  const override = overrideForSku(sku);
-  const imgSrc = override?.url ?? sku.imageUrl;
-  const salePrice = discountedPrice(sku);
-  const off = percentOff(sku);
+  const imgSrc = imageForSku(sku);
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
@@ -361,13 +274,8 @@ function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: 
             src={imgSrc}
             alt={sku.name}
             loading="lazy"
-            className={cn(
-              "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105",
-              override?.imgClassName,
-            )}
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = "none";
-            }}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
           />
         ) : (
           <div className="grid h-full w-full place-items-center text-muted-foreground">
@@ -377,71 +285,37 @@ function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: 
       </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-center justify-between text-xs">
-          <span className="font-semibold uppercase tracking-wider text-muted-foreground">
-            {sku.brand}
-          </span>
-          <span className="rounded-full bg-mission/15 px-2 py-0.5 font-semibold text-mission">
-            {sku.category}
-          </span>
+          <span className="font-semibold uppercase tracking-wider text-muted-foreground">{sku.brand}</span>
+          <span className="rounded-full bg-mission/15 px-2 py-0.5 font-semibold text-mission">{sku.category}</span>
         </div>
-        <h3 className="mt-2 font-display text-lg font-bold text-primary line-clamp-2">
-          {sku.name}
-        </h3>
-
+        <h3 className="mt-2 font-display text-lg font-bold text-primary line-clamp-2">{sku.name}</h3>
         <div className="mt-4 flex items-baseline gap-2">
-          <span className="font-display text-3xl font-black text-primary">
-            {formatMoney(salePrice)}
-          </span>
-          <span className="text-sm text-muted-foreground line-through">
-            {formatMoney(sku.msrp ?? 0)}
-          </span>
-          {off > 0 && (
-            <span className="ml-1 rounded-full bg-gold px-2 py-0.5 text-xs font-bold text-gold-foreground">
-              {off}% off
-            </span>
+          <span className="font-display text-3xl font-black text-primary">{formatMoney(sku.price)}</span>
+          {sku.msrp != null && sku.msrp > (sku.price ?? 0) && (
+            <span className="text-sm text-muted-foreground line-through">{formatMoney(sku.msrp)}</span>
           )}
         </div>
         <div className="mt-1 text-xs text-muted-foreground">
           {sku.unitsAvailable > 0 ? (
-            <>
-              <span className="font-semibold text-foreground">{sku.unitsAvailable}</span> units
-              available
-            </>
+            <><span className="font-semibold text-foreground">{sku.unitsAvailable}</span> units available</>
           ) : (
             <span className="text-destructive">Out of stock</span>
           )}
         </div>
-
         <Button
           onClick={onAdd}
           disabled={sku.unitsAvailable === 0}
           variant={added ? "mission" : "default"}
           className="mt-5 w-full"
         >
-          {added ? (
-            <>
-              <Check className="h-4 w-4" /> Added — add another
-            </>
-          ) : (
-            <>
-              <Plus className="h-4 w-4" /> Add to quote
-            </>
-          )}
+          {added ? <><Check className="h-4 w-4" /> Added — add another</> : <><Plus className="h-4 w-4" /> Add to quote</>}
         </Button>
       </div>
     </div>
   );
 }
 
-function BrandChip({
-  children,
-  active,
-  onClick,
-}: {
-  children: React.ReactNode;
-  active?: boolean;
-  onClick?: () => void;
-}) {
+function BrandChip({ children, active, onClick }: { children: React.ReactNode; active?: boolean; onClick?: () => void }) {
   return (
     <button
       onClick={onClick}
