@@ -103,15 +103,17 @@ function CatalogInner() {
       return true;
     });
     const sorted = [...list];
+    const p = (x: SheetRow) => x.price ?? 0;
+    const m = (x: SheetRow) => x.msrp ?? 0;
     switch (sort) {
       case "price-asc":
-        sorted.sort((a, b) => a.price - b.price);
+        sorted.sort((a, b) => p(a) - p(b));
         break;
       case "price-desc":
-        sorted.sort((a, b) => b.price - a.price);
+        sorted.sort((a, b) => p(b) - p(a));
         break;
       case "savings":
-        sorted.sort((a, b) => (b.msrp - b.price) / (b.msrp || 1) - (a.msrp - a.price) / (a.msrp || 1));
+        sorted.sort((a, b) => (m(b) - p(b)) / (m(b) || 1) - (m(a) - p(a)) / (m(a) || 1));
         break;
       case "name":
         sorted.sort((a, b) => a.name.localeCompare(b.name));
