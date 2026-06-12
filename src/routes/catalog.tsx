@@ -48,7 +48,8 @@ function overrideForSku(sku: SheetRow) {
   return null;
 }
 
-const CATEGORIES = ["All", "Lighting", "Mirrors", "Tables", "Large Furniture", "Accessories"] as const;
+const CATEGORIES = ["All", "Lighting", "Mirrors", "Tables"] as const;
+const ALLOWED_CATEGORIES = ["Lighting", "Mirrors", "Tables"] as const;
 type Category = (typeof CATEGORIES)[number];
 
 type SortKey = "featured" | "price-asc" | "price-desc" | "savings" | "name";
@@ -70,8 +71,14 @@ export const Route = createFileRoute("/catalog")({
 });
 
 function matchesCategory(sku: SheetRow, cat: Category): boolean {
+  const c = (sku.category ?? "").trim().toLowerCase();
+  if (!ALLOWED_CATEGORIES.some((a) => a.toLowerCase() === c)) return false;
   if (cat === "All") return true;
-  return (sku.category ?? "").trim().toLowerCase() === cat.toLowerCase();
+  return c === cat.toLowerCase();
+}
+
+function isHiddenBrand(sku: SheetRow): boolean {
+  return (sku.brand ?? "").trim().toLowerCase() === "vesta";
 }
 
 function CatalogInner() {
@@ -83,7 +90,7 @@ function CatalogInner() {
   const { add, items } = useQuote();
 
   const byCategory = useMemo(
-    () => all.filter((s) => matchesCategory(s, category)),
+    () => all.filter((s) => !isHiddenBrand(s) && matchesCategory(s, category)),
     [all, category],
   );
 
