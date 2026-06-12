@@ -186,26 +186,25 @@ function HomePage() {
       {/* STATS */}
       <section className="border-y border-border bg-cream" style={{ overflow: 'hidden' }}>
         <div className="container mx-auto px-4 md:px-6 py-10">
-          <div className="flex flex-row justify-around items-start gap-4">
-            <div className="flex flex-col items-center text-center max-w-[200px]">
+          <div className="flex flex-row justify-around items-center gap-4">
+            <div className="flex flex-col items-center text-center">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gold/20 text-gold mb-3">
                 <Recycle className="h-4 w-4" />
               </span>
-              <h3 className="text-[34px] font-bold text-primary leading-tight">Already 400+ tons</h3>
-              <p className="text-[13px] text-muted-foreground leading-[1.35] mt-1">diverted from landfill</p>
+              <h3 className="text-[26px] font-bold text-primary leading-tight whitespace-nowrap">100% kept out of landfill</h3>
             </div>
-            <div className="flex flex-col items-center text-center max-w-[200px]">
+            <div className="flex flex-col items-center text-center">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gold/20 text-gold mb-3">
                 <BadgeCheck className="h-4 w-4" />
               </span>
-              <h3 className="text-[34px] font-bold text-primary leading-tight">Up to 60%</h3>
+              <h3 className="text-[26px] font-bold text-primary leading-tight whitespace-nowrap">Up to 60%</h3>
               <p className="text-[13px] text-muted-foreground leading-[1.35] mt-1">below wholesale</p>
             </div>
-            <div className="flex flex-col items-center text-center max-w-[200px]">
+            <div className="flex flex-col items-center text-center">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gold/20 text-gold mb-3">
                 <ShieldCheck className="h-4 w-4" />
               </span>
-              <h3 className="text-[34px] font-bold text-primary leading-tight">New</h3>
+              <h3 className="text-[26px] font-bold text-primary leading-tight whitespace-nowrap">New</h3>
               <p className="text-[13px] text-muted-foreground leading-[1.35] mt-1">inspected and floor ready</p>
             </div>
           </div>
