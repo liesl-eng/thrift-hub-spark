@@ -71,8 +71,14 @@ export const Route = createFileRoute("/catalog")({
 });
 
 function matchesCategory(sku: SheetRow, cat: Category): boolean {
+  const c = (sku.category ?? "").trim().toLowerCase();
+  if (!ALLOWED_CATEGORIES.some((a) => a.toLowerCase() === c)) return false;
   if (cat === "All") return true;
-  return (sku.category ?? "").trim().toLowerCase() === cat.toLowerCase();
+  return c === cat.toLowerCase();
+}
+
+function isHiddenBrand(sku: SheetRow): boolean {
+  return (sku.brand ?? "").trim().toLowerCase() === "vesta";
 }
 
 function CatalogInner() {
