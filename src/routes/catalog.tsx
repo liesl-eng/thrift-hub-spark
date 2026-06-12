@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import {
   Select,
   SelectContent,
@@ -12,7 +12,7 @@ import {
 import { useCatalogProducts } from "@/hooks/useCatalogProducts";
 import type { SheetRow } from "@/lib/productSheet";
 import { useQuote } from "@/lib/quote-context";
-import { Check, Plus, Search, ShoppingBag, ImageOff } from "lucide-react";
+import { Check, Plus, ShoppingBag, ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import meridianBrushedSteel from "@/assets/meridian-brushed-steel.webp.asset.json";
 
@@ -74,7 +74,7 @@ function CatalogPage() {
   const [category, setCategory] = useState<Category>("All");
   const [brand, setBrand] = useState<string>("All");
   const [sort, setSort] = useState<SortKey>("qty-desc");
-  const [query, setQuery] = useState("");
+  
   const { add, items } = useQuote();
 
   const inCategory = useMemo(
@@ -98,14 +98,6 @@ function CatalogPage() {
   const filtered = useMemo(() => {
     const list = inCategory.filter((s) => {
       if (brand !== "All" && s.brand !== brand) return false;
-      if (query) {
-        const q = query.toLowerCase();
-        if (
-          !s.name.toLowerCase().includes(q) &&
-          !(s.brand ?? "").toLowerCase().includes(q)
-        )
-          return false;
-      }
       return true;
     });
 
@@ -134,7 +126,7 @@ function CatalogPage() {
         );
     }
     return sorted;
-  }, [inCategory, brand, query, sort]);
+  }, [inCategory, brand, sort]);
 
   const inQuote = (id: string) => items.some((i) => i.id === id);
 
@@ -227,18 +219,6 @@ function CatalogPage() {
       </div>
 
       <div className="container mx-auto px-4 md:px-6 py-8 md:py-10">
-        <div className="mb-6 max-w-md">
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={category === "All" ? "Search catalog…" : `Search ${category.toLowerCase()}…`}
-              className="pl-9 h-11"
-            />
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((sku, i) => {
             const id = skuId(sku);
@@ -303,9 +283,9 @@ function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: 
         )}
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-center justify-between text-xs">
-          <span className="font-semibold uppercase tracking-wider text-muted-foreground">{sku.brand}</span>
-          <span className="rounded-full bg-mission/15 px-2 py-0.5 font-semibold text-mission">{sku.category}</span>
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{sku.brand}</span>
+          <span className="rounded-full bg-mission/15 px-2 py-0.5 text-xs font-semibold text-mission">{sku.category}</span>
         </div>
         <h3 className="mt-2 font-display text-lg font-bold text-primary line-clamp-2">{sku.name}</h3>
         <div className="mt-4 flex items-baseline gap-2">
