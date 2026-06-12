@@ -263,37 +263,46 @@ function Dashboard({
               </tr>
             </thead>
             <tbody>
-              {(statusQ.data?.runs ?? []).map((r: any) => (
-                <tr key={r.id} className="border-t border-border align-top">
-                  <td className="px-4 py-3 text-muted-foreground">
-                    {new Date(r.started_at).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={
-                        r.status === "succeeded"
-                          ? "rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700"
-                          : r.status === "failed"
-                            ? "rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive"
-                            : "rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800"
-                      }
-                    >
-                      {r.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground">
-                    {r.error ? (
-                      <span className="text-destructive">{r.error}</span>
-                    ) : (
-                      <RunSummary summary={r.summary} />
-                    )}
-                  </td>
-                </tr>
-              ))}
+              {(statusQ.data?.runs ?? []).map((r: any) => {
+                const statusClass =
+                  r.status === "approved" || r.status === "auto_approved"
+                    ? "rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700"
+                    : r.status === "failed"
+                      ? "rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive"
+                      : r.status === "discarded"
+                        ? "rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                        : "rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800";
+                return (
+                  <tr key={r.id} className="border-t border-border align-top">
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {new Date(r.started_at).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3 font-medium">{r.brand}</td>
+                    <td className="px-4 py-3">
+                      <span className={statusClass}>{r.status}</span>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">
+                      {r.error_message ? (
+                        <span className="text-destructive">{r.error_message}</span>
+                      ) : (
+                        <span>
+                          {r.fetched_count ?? 0} items
+                          <span className="text-emerald-600"> +{r.new_count ?? 0}</span>
+                          <span className="text-coral"> −{r.removed_count ?? 0}</span>
+                          <span className="text-amber-600"> ~{r.changed_count ?? 0}</span>
+                          {r.status === "auto_approved" && (
+                            <span className="ml-1 italic">(auto-approved)</span>
+                          )}
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
               {(statusQ.data?.runs ?? []).length === 0 && (
                 <tr>
                   <td
-                    colSpan={3}
+                    colSpan={4}
                     className="px-4 py-10 text-center text-muted-foreground"
                   >
                     No import runs yet.
