@@ -25,7 +25,17 @@ function formatMoney(n: number): string {
 }
 
 function skuId(sku: SheetRow): string {
-  return `${sku.brand}::${sku.name}`;
+  return [
+    sku.brand,
+    sku.name,
+    sku.imageFilename,
+    sku.imageUrl,
+    sku.category,
+    sku.price,
+    sku.msrp,
+  ]
+    .map((part) => String(part ?? ""))
+    .join("::");
 }
 
 const DISCOUNT_RATE = 0.8; // 80% off MSRP
