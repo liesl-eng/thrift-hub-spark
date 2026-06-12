@@ -80,13 +80,13 @@ function CatalogPage() {
   const inCategory = useMemo(
     () =>
       category === "All"
-        ? products
-        : products.filter(
+        ? visibleProducts
+        : visibleProducts.filter(
             (p) =>
               (p.category ?? "").trim().toLowerCase() ===
               category.toLowerCase(),
           ),
-    [products, category],
+    [visibleProducts, category],
   );
 
   const brands = useMemo(
@@ -276,6 +276,7 @@ function CatalogPage() {
 
 function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: () => void }) {
   const imgSrc = imageForSku(sku);
+  const salePrice = sku.msrp != null ? Math.round(sku.msrp * 0.2 * 100) / 100 : sku.price;
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
@@ -300,10 +301,9 @@ function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: 
         </div>
         <h3 className="mt-2 font-display text-lg font-bold text-primary line-clamp-2">{sku.name}</h3>
         <div className="mt-4 flex items-baseline gap-2">
-          <span className="font-display text-3xl font-black text-primary">{formatMoney(sku.price)}</span>
-          {sku.msrp != null && sku.msrp > (sku.price ?? 0) && (
-            <span className="text-sm text-muted-foreground line-through">{formatMoney(sku.msrp)}</span>
-          )}
+          <span className="font-display text-3xl font-black text-primary">{formatMoney(salePrice)}</span>
+          <span className="text-sm text-muted-foreground line-through">{formatMoney(sku.msrp)}</span>
+          <span className="rounded-full bg-gold px-2 py-0.5 text-xs font-bold text-gold-foreground">80% off</span>
         </div>
         <div className="mt-1 text-xs text-muted-foreground">
           {sku.unitsAvailable > 0 ? (
