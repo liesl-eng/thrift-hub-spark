@@ -156,7 +156,7 @@ function CatalogInner() {
     } as unknown as Parameters<typeof add>[0]);
   };
 
-  const selectCategory = (c: Category) => {
+  const selectCategory = (c: string) => {
     setCategory(c);
     setBrand("All");
   };
