@@ -257,6 +257,7 @@ function Dashboard({
             <thead className="bg-secondary/60 text-left">
               <tr>
                 <th className="px-4 py-3 font-semibold">Started</th>
+                <th className="px-4 py-3 font-semibold">Brand</th>
                 <th className="px-4 py-3 font-semibold">Status</th>
                 <th className="px-4 py-3 font-semibold">Details</th>
               </tr>
