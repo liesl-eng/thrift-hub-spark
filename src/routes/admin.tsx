@@ -10,7 +10,7 @@ import {
   approveBrand,
   discardStaged,
 } from "@/lib/catalog.functions";
-import { formatMoney, type Sku } from "@/lib/catalog-types";
+import { formatMoney } from "@/lib/catalog-types";
 import { Button } from "@/components/ui/button";
 import {
   RefreshCw,
