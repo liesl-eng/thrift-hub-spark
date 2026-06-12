@@ -35,11 +35,8 @@ function discountedPrice(sku: SheetRow): number {
   return msrp > 0 ? Math.round(msrp * (1 - DISCOUNT_RATE) * 100) / 100 : sku.price ?? 0;
 }
 
-function percentOff(sku: SheetRow): number {
-  const msrp = sku.msrp ?? 0;
-  const price = sku.price ?? 0;
-  if (msrp <= 0) return 0;
-  return Math.round(((msrp - price) / msrp) * 100);
+function percentOff(_sku: SheetRow): number {
+  return 80;
 }
 
 // Manual image overrides — matched by case-insensitive substring against `${brand} ${name}`.
