@@ -134,8 +134,8 @@ function CatalogInner() {
       brand: sku.brand,
       category: sku.category ?? "",
       image: sku.imageUrl,
-      price: sku.price,
-      msrp: sku.msrp,
+      price: sku.price ?? 0,
+      msrp: sku.msrp ?? 0,
       units: sku.unitsAvailable,
     } as unknown as Parameters<typeof add>[0]);
   };
