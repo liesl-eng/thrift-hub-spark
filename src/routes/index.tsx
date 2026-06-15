@@ -162,7 +162,7 @@ function HomePage() {
             </span>
           </h1>
           <p className="mt-5 mx-auto max-w-2xl text-xl md:text-2xl text-primary-foreground/85">
-            Inventory with intention.
+            Inventory with intention
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild variant="hero" size="xl">
