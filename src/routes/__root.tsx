@@ -13,8 +13,10 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { QuoteProvider } from "@/lib/quote-context";
 import { FavoritesProvider } from "@/lib/favorites-context";
+import { OrderProvider } from "@/contexts/OrderContext";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { OrderBar } from "@/components/OrderBar";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Toaster } from "sonner";
 
@@ -133,14 +135,17 @@ function RootComponent() {
       <AuthProvider>
         <QuoteProvider>
           <FavoritesProvider>
-            <div className="flex min-h-screen flex-col">
-              <SiteHeader />
-              <main className="flex-1">
-                <Outlet />
-              </main>
-              <SiteFooter />
-            </div>
-            <Toaster richColors position="top-right" />
+            <OrderProvider>
+              <div className="flex min-h-screen flex-col">
+                <SiteHeader />
+                <main className="flex-1">
+                  <Outlet />
+                </main>
+                <SiteFooter />
+              </div>
+              <OrderBar />
+              <Toaster richColors position="top-right" />
+            </OrderProvider>
           </FavoritesProvider>
         </QuoteProvider>
       </AuthProvider>

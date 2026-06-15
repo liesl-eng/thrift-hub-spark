@@ -1,9 +1,8 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { useQuote } from "@/lib/quote-context";
 import { useFavorites } from "@/lib/favorites-context";
 import { useAuth } from "@/contexts/AuthContext";
-import { ShoppingBag, Recycle, Heart, LogOut } from "lucide-react";
+import { Recycle, Heart, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import comebackLogo from "@/assets/comeback-logo.avif.asset.json";
 
@@ -23,7 +22,6 @@ const NAV: NavItem[] = [
 ];
 
 export function SiteHeader() {
-  const { items, hydrated } = useQuote();
   const { items: favItems, hydrated: favHydrated } = useFavorites();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
@@ -31,7 +29,6 @@ export function SiteHeader() {
   const search = useRouterState({ select: (s) => s.location.search }) as {
     category?: string;
   };
-  const count = items.length;
   const favCount = favItems.length;
 
   const handleSignOut = async () => {
@@ -91,17 +88,6 @@ export function SiteHeader() {
               {favHydrated && favCount > 0 && (
                 <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-coral px-1.5 text-xs font-bold text-coral-foreground">
                   {favCount}
-                </span>
-              )}
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" size="sm" className="relative">
-            <Link to="/contact">
-              <ShoppingBag className="h-4 w-4" />
-              <span className="hidden sm:inline">Quote</span>
-              {hydrated && count > 0 && (
-                <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-coral px-1.5 text-xs font-bold text-coral-foreground">
-                  {count}
                 </span>
               )}
             </Link>

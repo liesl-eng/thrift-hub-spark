@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { useCatalogProducts } from "@/hooks/useCatalogProducts";
 import type { SheetRow } from "@/lib/productSheet";
-import { useQuote } from "@/lib/quote-context";
+import { useOrder } from "@/contexts/OrderContext";
 import { Check, Plus, ShoppingBag, ImageOff, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -90,7 +90,7 @@ function CatalogPage() {
   const [brand, setBrand] = useState<string>("All");
   const [sort, setSort] = useState<SortKey>("price-asc");
   
-  const { add, items } = useQuote();
+  const { addItem, items } = useOrder();
 
   const inCategory = useMemo(
     () =>
@@ -143,7 +143,7 @@ function CatalogPage() {
     return sorted;
   }, [inCategory, brand, sort]);
 
-  const inQuote = (id: string) => items.some((i) => i.id === id);
+  const inOrder = (id: string) => items.some((i) => i.id === id);
 
   const selectCategory = (c: Category) => {
     setCategory(c);
@@ -151,16 +151,15 @@ function CatalogPage() {
   };
 
   const addSku = (sku: SheetRow) => {
-    add({
+    const msrp = sku.msrp ?? sku.price ?? 0;
+    addItem({
       id: skuId(sku),
-      name: sku.name,
+      productName: sku.name,
       brand: sku.brand ?? "",
-      category: sku.category ?? "",
-      image: sku.imageUrl ?? "",
-      price: sku.price ?? 0,
-      msrp: sku.msrp ?? sku.price ?? 0,
-      units: sku.unitsAvailable,
-      lastUpdated: sku.sourceLastUpdated ?? "",
+      imageUrl: sku.imageUrl ?? "",
+      msrp,
+      yourPrice: Math.round(msrp * 0.2 * 100) / 100,
+      unitsAvailable: sku.unitsAvailable,
     });
   };
 
@@ -241,7 +240,7 @@ function CatalogPage() {
               <SkuCard
                 key={`${id}-${i}`}
                 sku={sku}
-                added={inQuote(id)}
+                added={inOrder(id)}
                 onAdd={() => addSku(sku)}
               />
             );
