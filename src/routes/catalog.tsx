@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useFavorites, favoriteIdFor, type FavoriteItem } from "@/lib/favorites-context";
 
 import {
   Select,
@@ -12,7 +13,7 @@ import {
 import { useCatalogProducts } from "@/hooks/useCatalogProducts";
 import type { SheetRow } from "@/lib/productSheet";
 import { useQuote } from "@/lib/quote-context";
-import { Check, Plus, ShoppingBag, ImageOff } from "lucide-react";
+import { Check, Plus, ShoppingBag, ImageOff, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import meridianBrushedSteel from "@/assets/meridian-brushed-steel.webp.asset.json";
 
@@ -46,7 +47,16 @@ type Category = (typeof CATEGORY_TABS)[number];
 
 type SortKey = "featured" | "price-asc" | "price-desc" | "name" | "qty-asc" | "qty-desc";
 
+type CatalogSearch = { category?: Category };
+
 export const Route = createFileRoute("/catalog")({
+  validateSearch: (raw: Record<string, unknown>): CatalogSearch => {
+    const c = typeof raw.category === "string" ? raw.category : undefined;
+    const match = CATEGORY_TABS.find(
+      (t) => t.toLowerCase() === (c ?? "").toLowerCase(),
+    );
+    return match ? { category: match } : {};
+  },
   head: () => ({
     meta: [
       { title: "Catalog — Comeback Restock" },
@@ -71,7 +81,11 @@ function CatalogPage() {
       ),
     [products],
   );
-  const [category, setCategory] = useState<Category>("All");
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: "/catalog" });
+  const category: Category = search.category ?? "All";
+  const setCategory = (c: Category) =>
+    navigate({ search: () => (c === "All" ? {} : { category: c }) });
   const [brand, setBrand] = useState<string>("All");
   const [sort, setSort] = useState<SortKey>("qty-desc");
   
@@ -265,6 +279,22 @@ function CatalogPage() {
 function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: () => void }) {
   const imgSrc = imageForSku(sku);
   const salePrice = sku.msrp != null ? Math.round(sku.msrp * 0.2 * 100) / 100 : sku.price;
+  const { toggle, isFavorite, hydrated } = useFavorites();
+  const favId = favoriteIdFor(sku);
+  const favored = hydrated && isFavorite(favId);
+  const onToggleFav = () => {
+    const item: FavoriteItem = {
+      id: favId,
+      name: sku.name,
+      brand: sku.brand ?? "",
+      category: sku.category ?? "",
+      image: imgSrc ?? "",
+      price: salePrice ?? 0,
+      msrp: sku.msrp ?? sku.price ?? 0,
+      unitsAvailable: sku.unitsAvailable,
+    };
+    toggle(item);
+  };
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
@@ -281,6 +311,18 @@ function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: 
             <ImageOff className="h-8 w-8" />
           </div>
         )}
+        <button
+          type="button"
+          onClick={onToggleFav}
+          aria-label={favored ? "Remove from favorites" : "Add to favorites"}
+          aria-pressed={favored}
+          className={cn(
+            "absolute top-3 right-3 grid h-9 w-9 place-items-center rounded-full bg-background/85 backdrop-blur transition-colors shadow-sm hover:bg-background",
+            favored ? "text-coral" : "text-muted-foreground hover:text-coral",
+          )}
+        >
+          <Heart className={cn("h-5 w-5", favored && "fill-current")} />
+        </button>
       </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-center justify-between">

@@ -166,9 +166,9 @@ function HomePage() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild variant="hero" size="xl">
-              <Link to="/catalog">
-                Shop Catalog <ArrowRight className="h-5 w-5" />
-              </Link>
+              <a href="#shop-by-category">
+                Shop Category <ArrowRight className="h-5 w-5" />
+              </a>
             </Button>
             <Button
               asChild
@@ -213,7 +213,7 @@ function HomePage() {
       </section>
 
       {/* SHOP BY CATEGORY */}
-      <section className="container mx-auto px-4 md:px-6 pt-10 md:pt-14 pb-10 md:pb-14">
+      <section id="shop-by-category" className="container mx-auto px-4 md:px-6 pt-10 md:pt-14 pb-10 md:pb-14 scroll-mt-20">
         <h2 className="text-center font-display text-4xl md:text-5xl font-black text-primary">
           Shop By Category
         </h2>
@@ -247,6 +247,7 @@ function HomePage() {
             <Link
               key={c.name}
               to="/catalog"
+              search={{ category: c.name }}
               className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-7 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]"
             >
               <div className={`absolute inset-x-0 top-0 h-1.5 ${c.accent}`} />
