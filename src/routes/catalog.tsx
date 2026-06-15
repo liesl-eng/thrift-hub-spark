@@ -47,7 +47,16 @@ type Category = (typeof CATEGORY_TABS)[number];
 
 type SortKey = "featured" | "price-asc" | "price-desc" | "name" | "qty-asc" | "qty-desc";
 
+type CatalogSearch = { category?: Category };
+
 export const Route = createFileRoute("/catalog")({
+  validateSearch: (raw: Record<string, unknown>): CatalogSearch => {
+    const c = typeof raw.category === "string" ? raw.category : undefined;
+    const match = CATEGORY_TABS.find(
+      (t) => t.toLowerCase() === (c ?? "").toLowerCase(),
+    );
+    return match ? { category: match } : {};
+  },
   head: () => ({
     meta: [
       { title: "Catalog — Comeback Restock" },
