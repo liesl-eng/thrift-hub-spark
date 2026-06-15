@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { useCatalogProducts } from "@/hooks/useCatalogProducts";
 import type { SheetRow } from "@/lib/productSheet";
-import { useQuote } from "@/lib/quote-context";
+import { useOrder } from "@/contexts/OrderContext";
 import { Check, Plus, ShoppingBag, ImageOff, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
