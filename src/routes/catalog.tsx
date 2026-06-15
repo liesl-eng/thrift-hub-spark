@@ -13,7 +13,7 @@ import {
 import { useCatalogProducts } from "@/hooks/useCatalogProducts";
 import type { SheetRow } from "@/lib/productSheet";
 import { useQuote } from "@/lib/quote-context";
-import { Check, Plus, ShoppingBag, ImageOff } from "lucide-react";
+import { Check, Plus, ShoppingBag, ImageOff, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import meridianBrushedSteel from "@/assets/meridian-brushed-steel.webp.asset.json";
 
