@@ -206,7 +206,7 @@ function HomePage() {
                 <ShieldCheck className="h-4 w-4" />
               </span>
               <h3 className="text-[40px] font-bold text-primary leading-tight whitespace-nowrap">Always New</h3>
-              <p className="text-lg text-muted-foreground leading-[1.35] mt-1">Inspected and floor ready</p>
+              <p className="text-lg text-muted-foreground leading-[1.35] mt-1">Tagged &amp; floor ready</p>
             </div>
           </div>
         </div>
