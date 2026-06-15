@@ -81,7 +81,11 @@ function CatalogPage() {
       ),
     [products],
   );
-  const [category, setCategory] = useState<Category>("All");
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: "/catalog" });
+  const category: Category = search.category ?? "All";
+  const setCategory = (c: Category) =>
+    navigate({ search: () => (c === "All" ? {} : { category: c }) });
   const [brand, setBrand] = useState<string>("All");
   const [sort, setSort] = useState<SortKey>("qty-desc");
   
