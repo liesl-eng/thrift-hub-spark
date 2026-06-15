@@ -106,9 +106,21 @@ export function SiteHeader() {
               )}
             </Link>
           </Button>
-          <Button asChild variant="hero" size="sm" className="hidden sm:inline-flex">
-            <Link to="/contact">Talk to us</Link>
-          </Button>
+          {user ? (
+            <div className="hidden sm:flex items-center gap-2">
+              <span className="text-xs text-muted-foreground max-w-[160px] truncate" title={user.email ?? ""}>
+                {user.email}
+              </span>
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                <LogOut className="h-4 w-4" />
+                <span>Sign Out</span>
+              </Button>
+            </div>
+          ) : (
+            <Button asChild variant="hero" size="sm" className="hidden sm:inline-flex">
+              <Link to="/auth">Sign In</Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>
