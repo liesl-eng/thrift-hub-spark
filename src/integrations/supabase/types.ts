@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      orders: {
+        Row: {
+          company_name: string
+          contact_name: string
+          created_at: string
+          email: string
+          id: string
+          notes: string | null
+          order_total: number
+          order_total_msrp: number
+          payload: Json
+          phone: string | null
+          total_items: number
+          total_savings: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_name: string
+          contact_name: string
+          created_at?: string
+          email: string
+          id?: string
+          notes?: string | null
+          order_total?: number
+          order_total_msrp?: number
+          payload: Json
+          phone?: string | null
+          total_items?: number
+          total_savings?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_name?: string
+          contact_name?: string
+          created_at?: string
+          email?: string
+          id?: string
+          notes?: string | null
+          order_total?: number
+          order_total_msrp?: number
+          payload?: Json
+          phone?: string | null
+          total_items?: number
+          total_savings?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       product_import_runs: {
         Row: {
           brand: string
