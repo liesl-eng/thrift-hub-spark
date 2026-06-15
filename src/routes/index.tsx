@@ -166,9 +166,9 @@ function HomePage() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild variant="hero" size="xl">
-              <Link to="/catalog">
-                Shop Catalog <ArrowRight className="h-5 w-5" />
-              </Link>
+              <a href="#shop-by-category">
+                Shop Category <ArrowRight className="h-5 w-5" />
+              </a>
             </Button>
             <Button
               asChild
