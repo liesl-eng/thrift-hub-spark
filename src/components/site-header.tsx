@@ -1,21 +1,35 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { useQuote } from "@/lib/quote-context";
-import { ShoppingBag, Recycle } from "lucide-react";
+import { useFavorites } from "@/lib/favorites-context";
+import { ShoppingBag, Recycle, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import comebackLogo from "@/assets/comeback-logo.avif.asset.json";
 
+type NavItem = {
+  to: "/" | "/catalog" | "/about";
+  label: string;
+  search?: { category?: string };
+  match?: string;
+};
 
-const NAV = [
+const NAV: NavItem[] = [
   { to: "/", label: "Home" },
-  { to: "/catalog", label: "Catalog" },
+  { to: "/catalog", label: "Lighting", search: { category: "Lighting" }, match: "lighting" },
+  { to: "/catalog", label: "Mirrors", search: { category: "Mirrors" }, match: "mirrors" },
+  { to: "/catalog", label: "Tables", search: { category: "Tables" }, match: "tables" },
   { to: "/about", label: "About" },
-] as const;
+];
 
 export function SiteHeader() {
   const { items, hydrated } = useQuote();
+  const { items: favItems, hydrated: favHydrated } = useFavorites();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const search = useRouterState({ select: (s) => s.location.search }) as {
+    category?: string;
+  };
   const count = items.length;
+  const favCount = favItems.length;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
@@ -34,14 +48,21 @@ export function SiteHeader() {
           </span>
         </Link>
 
-
         <nav className="hidden md:flex items-center gap-1">
           {NAV.map((n) => {
-            const active = pathname === n.to || (n.to !== "/" && pathname.startsWith(n.to));
+            const isCatalog = n.to === "/catalog";
+            const active = isCatalog
+              ? pathname.startsWith("/catalog") &&
+                n.match != null &&
+                (search?.category ?? "").toLowerCase() === n.match
+              : n.to === "/"
+                ? pathname === "/"
+                : pathname === n.to || pathname.startsWith(n.to);
             return (
               <Link
-                key={n.to}
+                key={`${n.to}-${n.label}`}
                 to={n.to}
+                search={n.search as never}
                 className={cn(
                   "px-3 py-2 text-sm font-medium rounded-md transition-colors",
                   active
@@ -56,6 +77,16 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <Button asChild variant="ghost" size="sm" className="relative" aria-label="Favorites">
+            <Link to="/favorites">
+              <Heart className="h-4 w-4" />
+              {favHydrated && favCount > 0 && (
+                <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-coral px-1.5 text-xs font-bold text-coral-foreground">
+                  {favCount}
+                </span>
+              )}
+            </Link>
+          </Button>
           <Button asChild variant="ghost" size="sm" className="relative">
             <Link to="/contact">
               <ShoppingBag className="h-4 w-4" />
