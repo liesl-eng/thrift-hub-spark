@@ -22,7 +22,6 @@ const NAV: NavItem[] = [
 ];
 
 export function SiteHeader() {
-  const { items, hydrated } = useQuote();
   const { items: favItems, hydrated: favHydrated } = useFavorites();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
@@ -30,7 +29,6 @@ export function SiteHeader() {
   const search = useRouterState({ select: (s) => s.location.search }) as {
     category?: string;
   };
-  const count = items.length;
   const favCount = favItems.length;
 
   const handleSignOut = async () => {
