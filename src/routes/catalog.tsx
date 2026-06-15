@@ -279,6 +279,22 @@ function CatalogPage() {
 function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: () => void }) {
   const imgSrc = imageForSku(sku);
   const salePrice = sku.msrp != null ? Math.round(sku.msrp * 0.2 * 100) / 100 : sku.price;
+  const { toggle, isFavorite, hydrated } = useFavorites();
+  const favId = favoriteIdFor(sku);
+  const favored = hydrated && isFavorite(favId);
+  const onToggleFav = () => {
+    const item: FavoriteItem = {
+      id: favId,
+      name: sku.name,
+      brand: sku.brand ?? "",
+      category: sku.category ?? "",
+      image: imgSrc ?? "",
+      price: salePrice ?? 0,
+      msrp: sku.msrp ?? sku.price ?? 0,
+      unitsAvailable: sku.unitsAvailable,
+    };
+    toggle(item);
+  };
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
@@ -295,6 +311,18 @@ function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: 
             <ImageOff className="h-8 w-8" />
           </div>
         )}
+        <button
+          type="button"
+          onClick={onToggleFav}
+          aria-label={favored ? "Remove from favorites" : "Add to favorites"}
+          aria-pressed={favored}
+          className={cn(
+            "absolute top-3 right-3 grid h-9 w-9 place-items-center rounded-full bg-background/85 backdrop-blur transition-colors shadow-sm hover:bg-background",
+            favored ? "text-coral" : "text-muted-foreground hover:text-coral",
+          )}
+        >
+          <Heart className={cn("h-5 w-5", favored && "fill-current")} />
+        </button>
       </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-center justify-between">
