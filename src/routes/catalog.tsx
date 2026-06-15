@@ -240,7 +240,7 @@ function CatalogPage() {
               <SkuCard
                 key={`${id}-${i}`}
                 sku={sku}
-                added={inQuote(id)}
+                added={inOrder(id)}
                 onAdd={() => addSku(sku)}
               />
             );
