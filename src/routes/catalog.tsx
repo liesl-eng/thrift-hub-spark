@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useFavorites, favoriteIdFor, type FavoriteItem } from "@/lib/favorites-context";
 
 import {
   Select,
