@@ -1,6 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Minus } from "lucide-react";
 import { useFavorites, favoriteIdFor, type FavoriteItem } from "@/lib/favorites-context";
 
 import {
@@ -150,7 +159,7 @@ function CatalogPage() {
     setBrand("All");
   };
 
-  const addSku = (sku: SheetRow) => {
+  const addSku = (sku: SheetRow, quantity: number) => {
     const msrp = sku.msrp ?? sku.price ?? 0;
     addItem({
       id: skuId(sku),
@@ -160,6 +169,7 @@ function CatalogPage() {
       msrp,
       yourPrice: Math.round(msrp * 0.2 * 100) / 100,
       unitsAvailable: sku.unitsAvailable,
+      quantity,
     });
   };
 
@@ -241,7 +251,7 @@ function CatalogPage() {
                 key={`${id}-${i}`}
                 sku={sku}
                 added={inOrder(id)}
-                onAdd={() => addSku(sku)}
+                onAdd={(qty) => addSku(sku, qty)}
               />
             );
           })}
@@ -276,13 +286,25 @@ function CatalogPage() {
   );
 }
 
-function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: () => void }) {
+function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: (qty: number) => void }) {
   const imgSrc = imageForSku(sku);
   const salePrice = sku.msrp != null ? Math.round(sku.msrp * 0.2 * 100) / 100 : sku.price;
   const { toggle, isFavorite, hydrated } = useFavorites();
   const { user } = useAuth();
   const favId = favoriteIdFor(sku);
   const favored = hydrated && isFavorite(favId);
+  const [qtyOpen, setQtyOpen] = useState(false);
+  const [qty, setQty] = useState(1);
+  const maxQty = Math.max(1, sku.unitsAvailable);
+  const openQty = () => {
+    setQty(1);
+    setQtyOpen(true);
+  };
+  const confirmAdd = () => {
+    const clamped = Math.max(1, Math.min(qty, maxQty));
+    onAdd(clamped);
+    setQtyOpen(false);
+  };
   const onToggleFav = () => {
     const item: FavoriteItem = {
       id: favId,
@@ -356,14 +378,73 @@ function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: 
           )}
         </div>
         <Button
-          onClick={onAdd}
+          onClick={openQty}
           disabled={sku.unitsAvailable === 0}
           variant={added ? "mission" : "default"}
           className="mt-5 w-full"
         >
-          {added ? <><Check className="h-4 w-4" /> Added — add another</> : <><Plus className="h-4 w-4" /> Add To Order</>}
+          {added ? <><Check className="h-4 w-4" /> Added — add more</> : <><Plus className="h-4 w-4" /> Add To Order</>}
         </Button>
       </div>
+
+      <Dialog open={qtyOpen} onOpenChange={setQtyOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="font-display">{sku.name}</DialogTitle>
+            <DialogDescription>
+              {sku.unitsAvailable} {sku.unitsAvailable === 1 ? "unit" : "units"} available
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center justify-center gap-4 py-4">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => setQty((q) => Math.max(1, q - 1))}
+              disabled={qty <= 1}
+              aria-label="Decrease quantity"
+            >
+              <Minus className="h-4 w-4" />
+            </Button>
+            <input
+              type="number"
+              min={1}
+              max={maxQty}
+              value={qty}
+              onChange={(e) => {
+                const n = parseInt(e.target.value, 10);
+                if (Number.isNaN(n)) setQty(1);
+                else setQty(Math.max(1, Math.min(n, maxQty)));
+              }}
+              className="w-20 rounded-md border border-border bg-background px-3 py-2 text-center font-display text-2xl font-bold"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => setQty((q) => Math.min(maxQty, q + 1))}
+              disabled={qty >= maxQty}
+              aria-label="Increase quantity"
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+          {user && salePrice != null && (
+            <div className="text-center text-sm text-muted-foreground">
+              Subtotal:{" "}
+              <span className="font-semibold text-foreground">
+                {formatMoney(salePrice * qty)}
+              </span>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setQtyOpen(false)}>Cancel</Button>
+            <Button onClick={confirmAdd}>
+              <Plus className="h-4 w-4" /> Add {qty} to Order
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
