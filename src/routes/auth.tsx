@@ -11,6 +11,10 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
+  validateSearch: (raw: Record<string, unknown>): { redirect?: string } => {
+    const r = typeof raw.redirect === "string" && raw.redirect.startsWith("/") ? raw.redirect : undefined;
+    return r ? { redirect: r } : {};
+  },
   component: AuthPage,
 });
 
