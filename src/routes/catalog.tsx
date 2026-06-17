@@ -339,7 +339,11 @@ function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: 
           </div>
         ) : (
           <div className="mt-4">
-            <Link to="/auth" className="text-sm font-semibold text-primary underline-offset-4 hover:underline">
+            <Link
+              to="/auth"
+              search={{ redirect: typeof window !== "undefined" ? window.location.pathname + window.location.search : "/catalog" }}
+              className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
+            >
               Sign in to see pricing
             </Link>
           </div>
