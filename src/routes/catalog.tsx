@@ -159,7 +159,7 @@ function CatalogPage() {
     setBrand("All");
   };
 
-  const addSku = (sku: SheetRow) => {
+  const addSku = (sku: SheetRow, quantity: number) => {
     const msrp = sku.msrp ?? sku.price ?? 0;
     addItem({
       id: skuId(sku),
@@ -169,6 +169,7 @@ function CatalogPage() {
       msrp,
       yourPrice: Math.round(msrp * 0.2 * 100) / 100,
       unitsAvailable: sku.unitsAvailable,
+      quantity,
     });
   };
 
