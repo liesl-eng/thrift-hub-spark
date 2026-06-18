@@ -60,7 +60,7 @@ function AboutPage() {
           {/* Intro paragraphs */}
           <div className="mt-8 space-y-4 text-lg text-muted-foreground">
             <p>
-              We work with boutique and sustainably-minded retailers that want to
+              We work with boutique and sustainably-minded retailers who want to
               stock smarter — sourcing quality home goods that are new, inspected,
               and ready for the floor.
             </p>
