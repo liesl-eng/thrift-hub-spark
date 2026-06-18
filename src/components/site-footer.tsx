@@ -32,8 +32,7 @@ export function SiteFooter() {
           <div>
             <p className="font-display font-bold uppercase text-sm mb-3 text-gold">Get in touch</p>
             <ul className="space-y-2 text-sm text-primary-foreground/80">
-              <li><a href="mailto:nonprofits@comebackgoods.com" className="hover:text-gold">nonprofits@comebackgoods.com</a></li>
-              <li><Link to="/contact" className="hover:text-gold">Request a quote</Link></li>
+              <li><a href="mailto:hello@comebackgoods.com" className="hover:text-gold">hello@comebackgoods.com</a></li>
             </ul>
           </div>
         </div>
