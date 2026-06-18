@@ -60,13 +60,13 @@ function AboutPage() {
           {/* Intro paragraphs */}
           <div className="mt-8 space-y-4 text-lg text-muted-foreground">
             <p>
-              We work with thrift stores, Goodwill-type retailers, and secondhand
-              boutiques that want to stock smarter — sourcing quality home goods
-              that are new, inspected, and ready for the floor.
+              We work with boutique and sustainably-minded retailers that want to
+              stock smarter — sourcing quality home goods that are new, inspected,
+              and ready for the floor.
             </p>
             <p>
               Every piece we carry was diverted from the waste stream. Not
-              returned, not damaged — just inventory that didn't fit the traditional
+              returned, not damaged — just inventory that didn't fit a traditional
               retail path. It comes to us. We get it to you.
             </p>
           </div>
