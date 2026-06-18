@@ -320,13 +320,13 @@ function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: 
   };
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      <div className="relative aspect-[4/3] overflow-hidden bg-muted p-3">
         {imgSrc ? (
           <img
             src={imgSrc}
             alt={sku.name}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-105"
             onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
           />
         ) : (
