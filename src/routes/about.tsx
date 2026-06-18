@@ -32,7 +32,7 @@ const BENEFITS = [
   {
     icon: Leaf,
     title: "100% Sustainable",
-    description: "Every item diverted from the waste stream — not a single piece to landfill.",
+    description: "Every item is diverted from the waste stream — not a single piece to landfill.",
     bg: "bg-primary/10",
     fg: "text-primary",
   },

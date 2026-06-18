@@ -90,7 +90,7 @@ const FEATURES = [
   },
   {
     title: "100% Sustainable",
-    body: "Every item diverted from the waste stream — not a single piece to landfill.",
+    body: "Every item is diverted from the waste stream — not a single piece to landfill.",
     icon: Leaf,
     bg: "bg-primary/10",
     fg: "text-primary",
