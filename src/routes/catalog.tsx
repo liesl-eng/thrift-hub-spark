@@ -57,7 +57,7 @@ function imageForSku(sku: SheetRow): string | null {
 const CATEGORY_TABS = ["All", "Tables", "Lighting", "Mirrors"] as const;
 type Category = (typeof CATEGORY_TABS)[number];
 
-type SortKey = "featured" | "price-asc" | "price-desc" | "name" | "qty-asc" | "qty-desc";
+type SortKey = "price-asc" | "price-desc" | "name" | "qty-asc" | "qty-desc";
 
 type CatalogSearch = { category?: Category };
 
@@ -144,7 +144,6 @@ function CatalogPage() {
       case "qty-desc":
         sorted.sort((a, b) => b.unitsAvailable - a.unitsAvailable);
         break;
-      case "featured":
       default:
         sorted.sort(
           (a, b) =>
@@ -234,7 +233,6 @@ function CatalogPage() {
             <SelectContent>
                 <SelectItem value="qty-desc">Quantity: High to Low</SelectItem>
                 <SelectItem value="qty-asc">Quantity: Low to High</SelectItem>
-                <SelectItem value="featured">Featured</SelectItem>
                 <SelectItem value="price-asc">Price: Low to High</SelectItem>
                 <SelectItem value="price-desc">Price: High to Low</SelectItem>
                 <SelectItem value="name">Name: A–Z</SelectItem>
