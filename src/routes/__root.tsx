@@ -94,8 +94,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Comeback Restock — Sustainable Sourcing. Premium Results." },
       { name: "twitter:description", content: "Premium, inspected home goods sourced for sustainably-minded boutique retailers. Inventory with intention." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8dd86274-75d7-4cbf-a102-2a5a9cada901/id-preview-6cee177e--05b32f0d-6e36-4faa-bb81-1b753d9ca750.lovable.app-1781029270264.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8dd86274-75d7-4cbf-a102-2a5a9cada901/id-preview-6cee177e--05b32f0d-6e36-4faa-bb81-1b753d9ca750.lovable.app-1781029270264.png" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/e620046c-4192-471f-8c3e-f11c32ecf8a5" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/e620046c-4192-471f-8c3e-f11c32ecf8a5" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
