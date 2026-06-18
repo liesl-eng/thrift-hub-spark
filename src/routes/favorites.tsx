@@ -69,13 +69,13 @@ function FavoritesPage() {
               key={it.id}
               className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]"
             >
-              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+              <div className="relative aspect-[4/3] overflow-hidden bg-muted p-3">
                 {it.image ? (
                   <img
                     src={it.image}
                     alt={it.name}
                     loading="lazy"
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain"
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).style.display =
                         "none";

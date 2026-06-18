@@ -442,7 +442,7 @@ function PreviewModal({
                         <img
                           src={r.item.image}
                           alt=""
-                          className="h-10 w-10 rounded object-cover"
+                          className="h-10 w-10 rounded object-contain"
                         />
                       ) : (
                         <div className="h-10 w-10 rounded bg-muted" />
