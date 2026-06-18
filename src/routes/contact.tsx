@@ -160,8 +160,8 @@ function ContactPage() {
                 Your quote is in our queue. Our partnerships team confirms
                 availability and freight within one business day. In a hurry?
                 Reach us directly at{" "}
-                <a href="mailto:nonprofits@comebackgoods.com" className="font-semibold text-primary underline underline-offset-4">
-                  nonprofits@comebackgoods.com
+                <a href="mailto:hello@comebackgoods.com" className="font-semibold text-primary underline underline-offset-4">
+                  hello@comebackgoods.com
                 </a>
                 .
               </p>
@@ -218,7 +218,7 @@ function ContactPage() {
 
           {/* Direct contact */}
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <ContactCard icon={Mail} label="Email" value="nonprofits@comebackgoods.com" href="mailto:nonprofits@comebackgoods.com" />
+            <ContactCard icon={Mail} label="Email" value="hello@comebackgoods.com" href="mailto:hello@comebackgoods.com" />
             <ContactCard icon={Phone} label="Phone" value="(415) 555-0140" href="tel:+14155550140" />
             <ContactCard icon={MapPin} label="Warehouse" value="Oakland, CA + Atlanta, GA" />
           </div>

@@ -63,7 +63,7 @@ function FaqPage() {
         </h1>
         <p className="mt-5 text-lg text-muted-foreground">
           If yours isn't here,{" "}
-          <a href="mailto:nonprofits@comebackgoods.com" className="underline underline-offset-4 hover:text-primary">
+          <a href="mailto:hello@comebackgoods.com" className="underline underline-offset-4 hover:text-primary">
             email the partnerships team
           </a>
           .
