@@ -278,7 +278,7 @@ export function OrderBar() {
                     key={i.id}
                     className="flex gap-4 rounded-xl border border-border p-3"
                   >
-                    <div className="h-20 w-20 flex-none overflow-hidden rounded-lg bg-muted p-3">
+                    <div className="h-20 w-20 flex-none overflow-hidden rounded-lg bg-muted">
                       {i.imageUrl ? (
                         <img
                           src={i.imageUrl}

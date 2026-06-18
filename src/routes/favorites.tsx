@@ -69,7 +69,7 @@ function FavoritesPage() {
               key={it.id}
               className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]"
             >
-              <div className="relative aspect-[4/3] overflow-hidden bg-muted p-3">
+              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                 {it.image ? (
                   <img
                     src={it.image}

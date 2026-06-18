@@ -320,7 +320,7 @@ function SkuCard({ sku, added, onAdd }: { sku: SheetRow; added: boolean; onAdd: 
   };
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted p-3">
+      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         {imgSrc ? (
           <img
             src={imgSrc}
