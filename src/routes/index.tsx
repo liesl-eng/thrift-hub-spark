@@ -75,24 +75,25 @@ const CATEGORIES = [
 
 const FEATURES = [
   {
-    title: "Real Savings, Zero Waste",
-    body: "Small batches. Sustainably sourced.",
-    icon: Recycle,
+    title: "Curated & Floor-Ready",
+    body: "Inspected inventory sourced directly from brand warehouses.",
+    icon: BadgeCheck,
+    bg: "bg-mission/10",
+    fg: "text-mission",
   },
   {
-    title: "Curated for How You Actually Buy",
-    body: "Room-ready kits and scheduled refresh programs.",
-    icon: Sparkles,
+    title: "Up to 60% Below Wholesale",
+    body: "Stretch your budget without sacrificing quality.",
+    icon: TrendingDown,
+    bg: "bg-emerald-500/10",
+    fg: "text-emerald-600",
   },
   {
-    title: "Replenishment on Your Schedule",
-    body: "Fast, reliable shipping. Procurement-ready and operationally easy.",
-    icon: Truck,
-  },
-  {
-    title: "Inspected by Comeback",
-    body: "Every item is graded and display-ready.",
-    icon: ShieldCheck,
+    title: "100% Sustainable",
+    body: "Every item diverted from the waste stream — not a single piece to landfill.",
+    icon: Leaf,
+    bg: "bg-primary/10",
+    fg: "text-primary",
   },
 ];
 
