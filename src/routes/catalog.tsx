@@ -99,7 +99,7 @@ function CatalogPage() {
   const setCategory = (c: Category) =>
     navigate({ search: () => (c === "All" ? {} : { category: c }) });
   const [brand, setBrand] = useState<string>("All");
-  const [sort, setSort] = useState<SortKey>("price-asc");
+  const [sort, setSort] = useState<SortKey>("qty-desc");
   
   const { addItem, items } = useOrder();
 
